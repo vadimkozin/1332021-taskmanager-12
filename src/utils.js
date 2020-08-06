@@ -34,10 +34,7 @@ export const isTaskExpiringToday = (dueDate) => {
   return currentDate.getTime() === dueDate.getTime();
 };
 
-export const isTaskRepeating = (repeating) => {
-  return Object.values(repeating).some(Boolean);
-};
+export const isTaskRepeating = (repeating) => Object.values(repeating).some(Boolean);
 
-export const humanizeTaskDueDate = (dueDate) => {
-  return dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`});
-};
+export const humanizeTaskDueDate = (dueDate) =>
+  dueDate.toLocaleString(`en-US`, {day: `numeric`, month: `long`});
