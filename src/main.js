@@ -5,7 +5,6 @@ import TaskEditView from './view/task-edit';
 import LoadMoreButtonView from './view/load-more-button';
 import BoardView from './view/board';
 import SortView from './view/sort';
-import NoTaskView from './view/no-task';
 import {generateTask} from "./mock/task.js";
 import {generateFilter} from "./mock/filter.js";
 import {render, RenderPosition} from './utils';
@@ -21,8 +20,41 @@ const filters = generateFilter(tasks);
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
-render(siteHeaderElement, new SiteMenuView().getElement());
+const renderTask = (taskListElement, task) => {
+  const taskComponent = new TaskView(task);
+  const taskEditComponent = new TaskEditView(task);
 
+  const replaceCardToForm = () => {
+    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
+  };
+
+  const replaceFormToCard = () => {
+    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
+  };
+
+  const onEscKeyDown = (evt) => {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      replaceFormToCard();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    }
+  };
+
+  taskComponent.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
+    replaceCardToForm();
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+
+  taskEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    replaceFormToCard();
+    document.removeEventListener(`keydown`, onEscKeyDown);
+  });
+
+  render(taskListElement, taskComponent.getElement());
+};
+
+render(siteHeaderElement, new SiteMenuView().getElement());
 render(siteMainElement, new FilterView(filters).getElement());
 render(siteMainElement, new BoardView().getElement());
 
@@ -30,12 +62,10 @@ const boardElement = siteMainElement.querySelector(`.board`);
 const taskListElement = boardElement.querySelector(`.board__tasks`);
 
 render(boardElement, new SortView().getElement(), RenderPosition.AFTER_BEGIN);
-render(taskListElement, new TaskEditView().getElement(tasks[0]));
 
 tasks
-  .slice(1, Task.COUNT_PER_STEP)
-  .forEach((task) => render(taskListElement, new TaskView(task).getElement()));
-
+  .slice(0, Math.min(tasks.length, Task.COUNT_PER_STEP))
+  .forEach((task) => renderTask(taskListElement, task));
 
 if (tasks.length > Task.COUNT_PER_STEP) {
 
@@ -50,7 +80,7 @@ if (tasks.length > Task.COUNT_PER_STEP) {
 
     tasks
       .slice(count, count + Task.COUNT_PER_STEP)
-      .forEach((task) => render(taskListElement, new TaskView(task).getElement()));
+      .forEach((task) => renderTask(taskListElement, task));
 
     count += Task.COUNT_PER_STEP;
 
