@@ -1,14 +1,14 @@
-const RenderPosition = {
+export const RenderPosition = {
   AFTER_BEGIN: `afterbegin`,
   BEFORE_END: `beforeend`,
 };
 
-export const render = (container, element, place) => {
+export const render = (container, element, place = RenderPosition.BEFORE_END) => {
   switch (place) {
-    case RenderPosition.AFTERBEGIN:
+    case RenderPosition.AFTER_BEGIN:
       container.prepend(element);
       break;
-    case RenderPosition.BEFOREEND:
+    case RenderPosition.BEFORE_END:
       container.append(element);
       break;
   }

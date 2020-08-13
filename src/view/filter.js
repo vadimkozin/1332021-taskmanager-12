@@ -29,12 +29,13 @@ export const createFilterTemplate = (filterItems) => {
 };
 
 export default class Filter {
-  constructor() {
+  constructor(filters) {
+    this._filters = filters;
     this._element = null;
   }
 
   getTemplate() {
-    return createFilterTemplate();
+    return createFilterTemplate(this._filters);
   }
 
   getElement() {
