@@ -1,4 +1,4 @@
-import {COLORS} from "../const.js";
+import {Config} from "../const.js";
 import {getRandomInteger} from "../utils.js";
 
 const generateDescription = () => {
@@ -53,9 +53,9 @@ const generateRepeating = () => {
 };
 
 const getRandomColor = () => {
-  const randomIndex = getRandomInteger(0, COLORS.length - 1);
+  const randomIndex = getRandomInteger(0, Config.COLORS.length - 1);
 
-  return COLORS[randomIndex];
+  return Config.COLORS[randomIndex];
 };
 
 export const generateTask = () => {

@@ -1,7 +1,6 @@
-export const RenderPosition = {
-  AFTER_BEGIN: `afterbegin`,
-  BEFORE_END: `beforeend`,
-};
+import {Config} from './const';
+
+const {RENDER_POSITION: RenderPosition} = Config;
 
 export const render = (container, element, place = RenderPosition.BEFORE_END) => {
   switch (place) {

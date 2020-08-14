@@ -7,7 +7,10 @@ import BoardView from './view/board';
 import SortView from './view/sort';
 import {generateTask} from "./mock/task.js";
 import {generateFilter} from "./mock/filter.js";
-import {render, RenderPosition} from './utils';
+import {render} from './utils';
+import {Config} from './const';
+
+const {RENDER_POSITION: RenderPosition} = Config;
 
 const Task = {
   COUNT: 33,
@@ -20,38 +23,35 @@ const filters = generateFilter(tasks);
 const siteMainElement = document.querySelector(`.main`);
 const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
+const replaceElement = (parentElement, elementFirst, elementSecond) => {
+  parentElement.replaceChild(elementFirst, elementSecond);
+};
+
 const renderTask = (taskListElement, task) => {
-  const taskComponent = new TaskView(task);
-  const taskEditComponent = new TaskEditView(task);
-
-  const replaceCardToForm = () => {
-    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
-  };
-
-  const replaceFormToCard = () => {
-    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
-  };
+  const taskElement = new TaskView(task).getElement();
+  const taskEditElement = new TaskEditView(task).getElement();
 
   const onEscKeyDown = (evt) => {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
+    if (evt.keyCode === Config.ESCAPE_CODE) {
       evt.preventDefault();
-      replaceFormToCard();
+      replaceElement(taskListElement, taskElement, taskEditElement);
       document.removeEventListener(`keydown`, onEscKeyDown);
     }
   };
 
-  taskComponent.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
-    replaceCardToForm();
+  taskElement.querySelector(`.card__btn--edit`).addEventListener(`click`, () => {
+    replaceElement(taskListElement, taskEditElement, taskElement);
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
-  taskEditComponent.getElement().querySelector(`form`).addEventListener(`submit`, (evt) => {
+  taskEditElement.querySelector(`form`).addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-    replaceFormToCard();
+    replaceElement(taskListElement, taskElement, taskEditElement);
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  render(taskListElement, taskComponent.getElement());
+  render(taskListElement, taskElement);
+
 };
 
 render(siteHeaderElement, new SiteMenuView().getElement());

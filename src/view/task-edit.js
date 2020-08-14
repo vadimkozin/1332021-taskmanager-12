@@ -1,4 +1,5 @@
-import {COLORS} from "../const.js";
+import {Config} from "../const.js";
+
 import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate, createElement} from "../utils.js";
 
 const createTaskEditDateTemplate = (dueDate) => {
@@ -43,7 +44,7 @@ const createTaskEditRepeatingTemplate = (repeating) => {
 };
 
 const createTaskEditColorsTemplate = (currentColor) => {
-  return COLORS.map((color) => `<input
+  return Config.COLORS.map((color) => `<input
     type="radio"
     id="color-${color}"
     class="card__color-input card__color-input--${color} visually-hidden"
