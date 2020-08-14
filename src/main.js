@@ -71,9 +71,9 @@ if (tasks.length > Task.COUNT_PER_STEP) {
 
   let count = Task.COUNT_PER_STEP;
 
-  render(boardElement, new LoadMoreButtonView().getElement());
+  const loadMoreElement = new LoadMoreButtonView().getElement();
 
-  const loadMoreElement = boardElement.querySelector(`.load-more`);
+  render(boardElement, loadMoreElement);
 
   const onClickLoadMoreButton = (evt) => {
     evt.preventDefault();
