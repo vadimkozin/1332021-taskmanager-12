@@ -1,9 +1,9 @@
-import {Config} from "../const.js";
+import {COLORS} from "../const.js";
 import AbstractView from "./abstract.js";
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils.js";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils/task";
 
 const BLANK_TASK = {
-  color: Config.COLORS[0],
+  color: COLORS[0],
   description: ``,
   dueDate: null,
   repeating: {
@@ -61,7 +61,7 @@ const createTaskEditRepeatingTemplate = (repeating) => {
 };
 
 const createTaskEditColorsTemplate = (currentColor) => {
-  return Config.COLORS.map((color) => `<input
+  return COLORS.map((color) => `<input
     type="radio"
     id="color-${color}"
     class="card__color-input card__color-input--${color} visually-hidden"
@@ -152,8 +152,8 @@ const createTaskEditTemplate = (task = {}) => {
 export default class TaskEdit extends AbstractView {
   constructor(task) {
     super();
-    this._task = task || BLANK_TASK;
 
+    this._task = task || BLANK_TASK;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 

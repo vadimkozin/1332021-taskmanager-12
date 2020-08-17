@@ -1,12 +1,6 @@
-export const Config = {
-  COLORS: [`black`, `yellow`, `blue`, `green`, `pink`],
-  ESCAPE_CODE: 27,
-};
+export const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
 
-export const RenderPosition = {
-  AFTER_BEGIN: `afterbegin`,
-  BEFORE_END: `beforeend`,
-};
+export const ESCAPE_CODE = 27;
 
 export const SortType = {
   DEFAULT: `default`,

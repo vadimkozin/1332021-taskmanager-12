@@ -1,5 +1,4 @@
 import Abstract from "../view/abstract.js";
-// import {RenderPosition} from '../const';
 
 export const RenderPosition = {
   AFTER_BEGIN: `afterbegin`,
