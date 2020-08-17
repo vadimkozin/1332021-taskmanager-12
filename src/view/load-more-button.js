@@ -1,14 +1,7 @@
 import AbstractView from "./abstract.js";
 
-export const createLoadMoreButtonTemplate = () =>
+const createLoadMoreButtonTemplate = () =>
   `<button class="load-more" type="button">load more</button>`;
-
-// export default class LoadMoreButton extends AbstractView {
-
-//   getTemplate() {
-//     return createLoadMoreButtonTemplate();
-//   }
-// }
 
 export default class LoadMoreButton extends AbstractView {
   constructor() {
@@ -42,5 +35,9 @@ export default class LoadMoreButton extends AbstractView {
     this._callback.click = callback;
     // 2. В addEventListener передадим абстрактный обработчик
     this.getElement().addEventListener(`click`, this._clickHandler);
+  }
+
+  removeClickHandler() {
+    this.getElement().removeEventListener(`click`, this._clickHandler);
   }
 }

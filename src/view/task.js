@@ -89,4 +89,8 @@ export default class Task extends AbstractView {
     this._callback.editClick = callback;
     this.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, this._editClickHandler);
   }
+
+  removeEditClickHandler() {
+    this.getElement().querySelector(`.card__btn--edit`).removeEventListener(`click`, this._editClickHandler);
+  }
 }

@@ -9,10 +9,8 @@ import BoardView from './view/board';
 import SortView from './view/sort';
 import {generateTask} from "./mock/task.js";
 import {generateFilter} from "./mock/filter.js";
-import {render} from './utils';
-import {Config} from './const';
-
-const {RENDER_POSITION: RenderPosition} = Config;
+import {render} from './utils/render';
+import {Config, RenderPosition} from './const';
 
 const Task = {
   COUNT: 33,
