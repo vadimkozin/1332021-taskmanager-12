@@ -7,3 +7,9 @@ export const Config = {
   },
 };
 
+export const SortType = {
+  DEFAULT: `default`,
+  DATE_DOWN: `date-down`,
+  DATE_UP: `date-up`
+};
+
