@@ -7,7 +7,7 @@ import TaskEditView from "../view/task-edit.js";
 import LoadMoreButtonView from "../view/load-more-button.js";
 import {render, RenderPosition, replace, remove} from "../utils/render.js";
 import {sortTaskUp, sortTaskDown} from "../utils/task.js";
-import {SortType} from "../const.js";
+import {SortType, ESCAPE_CODE} from "../const.js";
 
 const TASK_COUNT_PER_STEP = 8;
 
@@ -71,29 +71,21 @@ export default class Board {
     const taskComponent = new TaskView(task);
     const taskEditComponent = new TaskEditView(task);
 
-    const replaceCardToForm = () => {
-      replace(taskEditComponent, taskComponent);
-    };
-
-    const replaceFormToCard = () => {
-      replace(taskComponent, taskEditComponent);
-    };
-
     const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
+      if (evt.keyCode === ESCAPE_CODE) {
         evt.preventDefault();
-        replaceFormToCard();
+        replace(taskComponent, taskEditComponent);
         document.removeEventListener(`keydown`, onEscKeyDown);
       }
     };
 
     taskComponent.setEditClickHandler(() => {
-      replaceCardToForm();
+      replace(taskEditComponent, taskComponent);
       document.addEventListener(`keydown`, onEscKeyDown);
     });
 
     taskEditComponent.setFormSubmitHandler(() => {
-      replaceFormToCard();
+      replace(taskComponent, taskEditComponent);
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
 
