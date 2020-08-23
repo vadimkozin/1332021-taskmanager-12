@@ -1,6 +1,7 @@
 import TaskView from "../view/task.js";
 import TaskEditView from "../view/task-edit.js";
-import {render, RenderPosition, replace, remove} from "../utils/render.js";
+import {render, replace, remove} from "../utils/render.js";
+import {ESCAPE_CODE} from "../const";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -39,7 +40,7 @@ export default class Task {
     this._taskEditComponent.setFormSubmitHandler(this._handleFormSubmit);
 
     if (prevTaskComponent === null || prevTaskEditComponent === null) {
-      render(this._taskListContainer, this._taskComponent, RenderPosition.BEFOREEND);
+      render(this._taskListContainer, this._taskComponent);
       return;
     }
 
@@ -80,7 +81,7 @@ export default class Task {
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
+    if (evt.keyCode === ESCAPE_CODE) {
       evt.preventDefault();
       this._taskEditComponent.reset(this._task);
       this._replaceFormToCard();
@@ -91,28 +92,16 @@ export default class Task {
     this._replaceCardToForm();
   }
 
+  _addData(obj) {
+    return Object.assign({}, this._task, obj);
+  }
+
   _handleFavoriteClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._task,
-            {
-              isFavorite: !this._task.isFavorite
-            }
-        )
-    );
+    this._changeData(this._addData({isFavorite: !this._task.isFavorite}));
   }
 
   _handleArchiveClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._task,
-            {
-              isArchive: !this._task.isArchive
-            }
-        )
-    );
+    this._changeData(this._addData({isArchive: !this._task.isArchive}));
   }
 
   _handleFormSubmit(task) {

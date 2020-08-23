@@ -1,6 +1,9 @@
 import {COLORS} from "../const.js";
 import {getRandomInteger} from "../utils/common";
 
+let countId = 1;
+const generateId = () => countId++;
+
 const generateDescription = () => {
   const descriptions = [
     `Изучить теорию`,
@@ -64,6 +67,7 @@ export const generateTask = () => {
     };
 
   return {
+    id: generateId(),
     description: generateDescription(),
     dueDate,
     repeating,
