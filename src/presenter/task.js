@@ -18,42 +18,90 @@ export default class Task {
     this._taskEditComponent = null;
     this._mode = Mode.DEFAULT;
 
-    this._handleEditClick = this._handleEditClick.bind(this);
-    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
-    this._handleArchiveClick = this._handleArchiveClick.bind(this);
-    this._handleFormSubmit = this._handleFormSubmit.bind(this);
-    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._setHandlers();
+  }
+
+  _setHandlers() {
+    this._handlers = {};
+
+    this._handlers.editClick = () => this._replaceCardToForm();
+
+    this._handlers.favoriteClick = () =>
+      this._changeData(this._addData({isFavorite: !this._task.isFavorite}));
+
+    this._handlers.arhiveClick = () =>
+      this._changeData(this._addData({isArchive: !this._task.isArchive}));
+
+    this._handlers.formSubmit = (task) => {
+      this._changeData(task);
+      this._replaceFormToCard();
+    };
+
+    this._handlers.escKeyDownHandler = (evt) => {
+      if (evt.keyCode === ESCAPE_CODE) {
+        evt.preventDefault();
+        this._taskEditComponent.reset(this._task);
+        this._replaceFormToCard();
+      }
+    };
+
+    this._handlers.editClick = this._handlers.editClick.bind(this);
+    this._handlers.favoriteClick = this._handlers.favoriteClick.bind(this);
+    this._handlers.arhiveClick = this._handlers.arhiveClick.bind(this);
+    this._handlers.formSubmit = this._handlers.formSubmit.bind(this);
+    this._handlers.escKeyDownHandler = this._handlers.escKeyDownHandler.bind(this);
   }
 
   init(task) {
     this._task = task;
 
-    const prevTaskComponent = this._taskComponent;
-    const prevTaskEditComponent = this._taskEditComponent;
+    this._initSavePrev();
 
     this._taskComponent = new TaskView(task);
     this._taskEditComponent = new TaskEditView(task);
 
-    this._taskComponent.setEditClickHandler(this._handleEditClick);
-    this._taskComponent.setFavoriteClickHandler(this._handleFavoriteClick);
-    this._taskComponent.setArchiveClickHandler(this._handleArchiveClick);
-    this._taskEditComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._initSetHandlers();
 
-    if (prevTaskComponent === null || prevTaskEditComponent === null) {
+    if (this._initIsFirstCall()) {
       render(this._taskListContainer, this._taskComponent);
       return;
     }
 
+    this._initReplaceComponent();
+    this._initRemovePrev();
+  }
+
+  _initSavePrev() {
+    this._prevTaskComponent = this._taskComponent;
+    this._prevTaskEditComponent = this._taskEditComponent;
+  }
+
+  _initSetHandlers() {
+    this._taskComponent.setEditClickHandler(this._handlers.editClick);
+    this._taskComponent.setFavoriteClickHandler(this._handlers.favoriteClick);
+    this._taskComponent.setArchiveClickHandler(this._handlers.arhiveClick);
+    this._taskEditComponent.setFormSubmitHandler(this._handlers.formSubmit);
+  }
+
+  _initIsFirstCall() {
+    return (this._prevTaskComponent === null || this._prevTaskEditComponent === null);
+  }
+
+  _initReplaceComponent() {
     if (this._mode === Mode.DEFAULT) {
-      replace(this._taskComponent, prevTaskComponent);
+      replace(this._taskComponent, this._prevTaskComponent);
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._taskEditComponent, prevTaskEditComponent);
+      replace(this._taskEditComponent, this._prevTaskEditComponent);
     }
+  }
 
-    remove(prevTaskComponent);
-    remove(prevTaskEditComponent);
+  _initRemovePrev() {
+    remove(this._prevTaskComponent);
+    remove(this._prevTaskEditComponent);
+    this._prevTaskComponent = null;
+    this._prevTaskEditComponent = null;
   }
 
   destroy() {
@@ -69,43 +117,20 @@ export default class Task {
 
   _replaceCardToForm() {
     replace(this._taskEditComponent, this._taskComponent);
-    document.addEventListener(`keydown`, this._escKeyDownHandler);
+    document.addEventListener(`keydown`, this._handlers.escKeyDownHandler);
+
     this._changeMode();
     this._mode = Mode.EDITING;
   }
 
   _replaceFormToCard() {
     replace(this._taskComponent, this._taskEditComponent);
-    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    document.removeEventListener(`keydown`, this._handlers.escKeyDownHandler);
+
     this._mode = Mode.DEFAULT;
   }
 
-  _escKeyDownHandler(evt) {
-    if (evt.keyCode === ESCAPE_CODE) {
-      evt.preventDefault();
-      this._taskEditComponent.reset(this._task);
-      this._replaceFormToCard();
-    }
-  }
-
-  _handleEditClick() {
-    this._replaceCardToForm();
-  }
-
-  _addData(obj) {
-    return Object.assign({}, this._task, obj);
-  }
-
-  _handleFavoriteClick() {
-    this._changeData(this._addData({isFavorite: !this._task.isFavorite}));
-  }
-
-  _handleArchiveClick() {
-    this._changeData(this._addData({isArchive: !this._task.isArchive}));
-  }
-
-  _handleFormSubmit(task) {
-    this._changeData(task);
-    this._replaceFormToCard();
+  _addData(additionalData) {
+    return Object.assign({}, this._task, additionalData);
   }
 }

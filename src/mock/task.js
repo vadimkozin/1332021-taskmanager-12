@@ -1,8 +1,6 @@
+import uniqueId from 'lodash.uniqueid';
 import {COLORS} from "../const.js";
 import {getRandomInteger} from "../utils/common";
-
-let countId = 1;
-const generateId = () => countId++;
 
 const generateDescription = () => {
   const descriptions = [
@@ -67,7 +65,7 @@ export const generateTask = () => {
     };
 
   return {
-    id: generateId(),
+    id: uniqueId(),
     description: generateDescription(),
     dueDate,
     repeating,

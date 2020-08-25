@@ -24,10 +24,48 @@ export default class Board {
     this._noTaskComponent = new NoTaskView();
     this._loadMoreButtonComponent = new LoadMoreButtonView();
 
-    this._handleTaskChange = this._handleTaskChange.bind(this);
-    this._handleModeChange = this._handleModeChange.bind(this);
-    this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
-    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
+    this._setHandlers();
+  }
+
+  _setHandlers() {
+    this._handlers = {};
+
+    this._handlers.taskChange = (updatedTask) => {
+      this._boardTasks = updateItem(this._boardTasks, updatedTask);
+      this._sourcedBoardTasks = updateItem(this._sourcedBoardTasks, updatedTask);
+      this._taskPresenter[updatedTask.id].init(updatedTask);
+    };
+
+    this._handlers.modeChange = () => {
+      Object
+        .values(this._taskPresenter)
+        .forEach((presenter) => presenter.resetView());
+    };
+
+    this._handlers.sortTypeChange = (sortType) => {
+      if (this._currenSortType === sortType) {
+        return;
+      }
+
+      this._sortTasks(sortType);
+      this._clearTaskList();
+      this._renderTaskList();
+    };
+
+    this._handlers.loadMoreButtonClick = () => {
+      this._renderTasks(this._renderedTaskCount, this._renderedTaskCount + TASK_COUNT_PER_STEP);
+      this._renderedTaskCount += TASK_COUNT_PER_STEP;
+
+      if (this._renderedTaskCount >= this._boardTasks.length) {
+        this._loadMoreButtonComponent.removeClickHandler();
+        remove(this._loadMoreButtonComponent);
+      }
+    };
+
+    this._handlers.taskChange = this._handlers.taskChange.bind(this);
+    this._handlers.modeChange = this._handlers.modeChange.bind(this);
+    this._handlers.sortTypeChange = this._handlers.sortTypeChange.bind(this);
+    this._handlers.loadMoreButtonClick = this._handlers.loadMoreButtonClick.bind(this);
   }
 
   init(boardTasks) {
@@ -38,18 +76,6 @@ export default class Board {
     render(this._boardComponent, this._taskListComponent);
 
     this._renderBoard();
-  }
-
-  _handleModeChange() {
-    Object
-      .values(this._taskPresenter)
-      .forEach((presenter) => presenter.resetView());
-  }
-
-  _handleTaskChange(updatedTask) {
-    this._boardTasks = updateItem(this._boardTasks, updatedTask);
-    this._sourcedBoardTasks = updateItem(this._sourcedBoardTasks, updatedTask);
-    this._taskPresenter[updatedTask.id].init(updatedTask);
   }
 
   _sortTasks(sortType) {
@@ -67,23 +93,14 @@ export default class Board {
     this._currenSortType = sortType;
   }
 
-  _handleSortTypeChange(sortType) {
-    if (this._currenSortType === sortType) {
-      return;
-    }
-
-    this._sortTasks(sortType);
-    this._clearTaskList();
-    this._renderTaskList();
-  }
-
   _renderSort() {
     render(this._boardComponent, this._sortComponent, RenderPosition.AFTER_BEGIN);
-    this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
+    this._sortComponent.setSortTypeChangeHandler(this._handlers.sortTypeChange);
   }
 
   _renderTask(task) {
-    const taskPresenter = new TaskPresenter(this._taskListComponent, this._handleTaskChange, this._handleModeChange);
+    const taskPresenter = new TaskPresenter(this._taskListComponent, this._handlers.taskChange, this._handlers.modeChange);
+
     taskPresenter.init(task);
     this._taskPresenter[task.id] = taskPresenter;
   }
@@ -98,20 +115,9 @@ export default class Board {
     render(this._boardComponent, this._noTaskComponent, RenderPosition.AFTER_BEGIN);
   }
 
-  _handleLoadMoreButtonClick() {
-    this._renderTasks(this._renderedTaskCount, this._renderedTaskCount + TASK_COUNT_PER_STEP);
-    this._renderedTaskCount += TASK_COUNT_PER_STEP;
-
-    if (this._renderedTaskCount >= this._boardTasks.length) {
-      this._loadMoreButtonComponent.removeClickHandler();
-      remove(this._loadMoreButtonComponent);
-    }
-  }
-
   _renderLoadMoreButton() {
     render(this._boardComponent, this._loadMoreButtonComponent);
-
-    this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreButtonClick);
+    this._loadMoreButtonComponent.setClickHandler(this._handlers.loadMoreButtonClick);
   }
 
   _clearTaskList() {
