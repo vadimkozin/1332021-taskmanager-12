@@ -1,5 +1,5 @@
 import FilterView from "../view/filter.js";
-import {render, RenderPosition, replace, remove} from "../utils/render.js";
+import {render, replace, remove} from "../utils/render.js";
 import {filter} from "../utils/filter.js";
 import {FilterType, UpdateType} from "../const.js";
 
@@ -29,7 +29,7 @@ export default class Filter {
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
+      render(this._filterContainer, this._filterComponent);
       return;
     }
 

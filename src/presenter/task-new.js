@@ -1,7 +1,8 @@
+import uniqueId from 'lodash.uniqueid';
 import TaskEditView from "../view/task-edit.js";
-import {generateId} from "../mock/task.js";
 import {remove, render, RenderPosition} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
+import {ESCAPE_CODE} from "../const";
 
 export default class TaskNew {
   constructor(taskListContainer, changeData) {
@@ -51,9 +52,7 @@ export default class TaskNew {
     this._changeData(
         UserAction.ADD_TASK,
         UpdateType.MINOR,
-        // Пока у нас нет сервера, который бы после сохранения
-        // выдывал честный id задачи, нам нужно позаботиться об этом самим
-        Object.assign({id: generateId()}, task)
+        Object.assign({id: uniqueId()}, task)
     );
     this.destroy();
   }
@@ -63,7 +62,7 @@ export default class TaskNew {
   }
 
   _escKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
+    if (evt.keyCode === ESCAPE_CODE) {
       evt.preventDefault();
       this.destroy();
     }
