@@ -1,19 +1,15 @@
 import SiteMenuView from "./view/site-menu.js";
-// import FilterView from "./view/filter.js";
 import {generateTask} from "./mock/task.js";
-// import {generateFilter} from "./mock/filter.js";
 import BoardPresenter from "./presenter/board.js";
 import FilterPresenter from "./presenter/filter.js";
 import TasksModel from "./model/tasks.js";
 import FilterModel from "./model/filter.js";
-// import {render} from "./utils/render.js";
 import {render, remove} from "./utils/render.js";
 import {MenuItem, UpdateType, FilterType} from "./const.js";
 
 const TASK_COUNT = 19;
 
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
-// const filters = generateFilter(tasks);
 
 const tasksModel = new TasksModel();
 tasksModel.setTasks(tasks);

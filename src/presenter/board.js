@@ -215,7 +215,9 @@ export default class Board {
 
     remove(this._sortComponent);
     remove(this._noTaskComponent);
-    remove(this._loadMoreButtonComponent);
+    if (this._loadMoreButtonComponent) {
+      remove(this._loadMoreButtonComponent);
+    }
 
     if (resetRenderedTaskCount) {
       this._renderedTaskCount = TASK_COUNT_PER_STEP;
