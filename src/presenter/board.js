@@ -153,21 +153,6 @@ export default class Board {
     return filtredTasks;
   }
 
-  _sortTasks(sortType) {
-    switch (sortType) {
-      case SortType.DATE_UP:
-        this._boardTasks.sort(sortTaskUp);
-        break;
-      case SortType.DATE_DOWN:
-        this._boardTasks.sort(sortTaskDown);
-        break;
-      default:
-        this._boardTasks = this._sourcedBoardTasks.slice();
-    }
-
-    this._currenSortType = sortType;
-  }
-
   _renderSort() {
     if (this._sortComponent !== null) {
       this._sortComponent = null;
