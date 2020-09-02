@@ -4,7 +4,7 @@ import BoardPresenter from "./presenter/board.js";
 import FilterPresenter from "./presenter/filter.js";
 import TasksModel from "./model/tasks.js";
 import FilterModel from "./model/filter.js";
-import {render, remove} from "./utils/render.js";
+import {render} from "./utils/render.js";
 import {MenuItem, UpdateType, FilterType} from "./const.js";
 
 const TASK_COUNT = 19;
@@ -30,27 +30,25 @@ const handleTaskNewFormClose = () => {
   siteMenuComponent.setMenuItem(MenuItem.TASKS);
 };
 
-// let statisticsComponent = null;
+// пока запретим меню TASKS
+const disableMenuTask = () => {
+  siteMenuComponent.getElement().querySelector(`[value=${MenuItem.TASKS}]`).disabled = true;
+};
 
 const handleSiteMenuClick = (menuItem) => {
-  console.log(menuItem);
   switch (menuItem) {
     case MenuItem.ADD_NEW_TASK:
-      // remove(statisticsComponent);
       boardPresenter.destroy();
       filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
       boardPresenter.init();
       boardPresenter.createTask(handleTaskNewFormClose);
-      siteMenuComponent.getElement().querySelector(`[value=${MenuItem.TASKS}]`).disabled = true;
+      disableMenuTask();
       break;
     case MenuItem.TASKS:
       boardPresenter.init();
-      // remove(statisticsComponent);
       break;
     case MenuItem.STATISTICS:
-      // boardPresenter.destroy();
-      // statisticsComponent = new StatisticsView(tasksModel.getTasks());
-      // render(siteMainElement, statisticsComponent, RenderPosition.BEFOREEND);
+      disableMenuTask();
       break;
   }
 };

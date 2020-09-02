@@ -52,45 +52,12 @@ export default class Filter {
   _getFilters() {
     const tasks = this._tasksModel.getTasks();
 
-    // return Object.keys(FilterType).map((type) =>
-    //   ({
-    //     type: type.toLowerCase(),
-    //     name: FilterType[type],
-    //     count: filter[type.toLowerCase()](tasks).length
-    //   })
-    // );
-
-    return [
-      {
-        type: FilterType.ALL,
-        name: `_All_`,
-        count: filter[FilterType.ALL](tasks).length
-      },
-      {
-        type: FilterType.OVERDUE,
-        name: `Overdue`,
-        count: filter[FilterType.OVERDUE](tasks).length
-      },
-      {
-        type: FilterType.TODAY,
-        name: `Today`,
-        count: filter[FilterType.TODAY](tasks).length
-      },
-      {
-        type: FilterType.FAVORITES,
-        name: `Favorites`,
-        count: filter[FilterType.FAVORITES](tasks).length
-      },
-      {
-        type: FilterType.REPEATING,
-        name: `Repeating`,
-        count: filter[FilterType.REPEATING](tasks).length
-      },
-      {
-        type: FilterType.ARCHIVE,
-        name: `Archive`,
-        count: filter[FilterType.ARCHIVE](tasks).length
-      }
-    ];
+    return Object.keys(FilterType).map((type) =>
+      ({
+        type: FilterType[type],
+        name: FilterType[type],
+        count: filter[FilterType[type]](tasks).length
+      })
+    );
   }
 }
