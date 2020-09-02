@@ -52,14 +52,14 @@ export default class Filter {
   _getFilters() {
     const tasks = this._tasksModel.getTasks();
 
-    return Object.keys(FilterType).map((type) =>
-      ({
-        type: type.toLowerCase(),
-        name: FilterType[type],
-        count: filter[type.toLowerCase()](tasks).length
-      })
-    );
-  /*
+    // return Object.keys(FilterType).map((type) =>
+    //   ({
+    //     type: type.toLowerCase(),
+    //     name: FilterType[type],
+    //     count: filter[type.toLowerCase()](tasks).length
+    //   })
+    // );
+
     return [
       {
         type: FilterType.ALL,
@@ -92,6 +92,5 @@ export default class Filter {
         count: filter[FilterType.ARCHIVE](tasks).length
       }
     ];
-  */
   }
 }

@@ -28,7 +28,7 @@ export default class TaskNew {
     this._taskEditComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._taskEditComponent.setDeleteClickHandler(this._handleDeleteClick);
 
-    render(this._taskListContainer, this._taskEditComponent, RenderPosition.AFTERBEGIN);
+    render(this._taskListContainer, this._taskEditComponent, RenderPosition.AFTER_BEGIN);
 
     document.addEventListener(`keydown`, this._escKeyDownHandler);
   }

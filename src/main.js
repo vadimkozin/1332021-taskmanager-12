@@ -33,6 +33,7 @@ const handleTaskNewFormClose = () => {
 // let statisticsComponent = null;
 
 const handleSiteMenuClick = (menuItem) => {
+  console.log(menuItem);
   switch (menuItem) {
     case MenuItem.ADD_NEW_TASK:
       // remove(statisticsComponent);

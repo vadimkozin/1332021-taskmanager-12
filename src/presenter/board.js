@@ -30,7 +30,7 @@ export default class Board {
 
     this._setHandlers();
 
-    this._taskNewPresenter = new TaskNewPresenter(this._taskListComponent, this._handleViewAction);
+    this._taskNewPresenter = new TaskNewPresenter(this._taskListComponent, this._handlers.viewAction);
   }
 
   _setHandlers() {
@@ -130,8 +130,8 @@ export default class Board {
     remove(this._taskListComponent);
     remove(this._boardComponent);
 
-    this._tasksModel.removeObserver(this._handleModelEvent);
-    this._filterModel.removeObserver(this._handleModelEvent);
+    this._tasksModel.removeObserver(this._handlers.modelEvent);
+    this._filterModel.removeObserver(this._handlers.modelEvent);
   }
 
   createTask(callback) {
