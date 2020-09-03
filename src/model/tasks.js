@@ -6,15 +6,15 @@ export default class Tasks extends Observer {
     this._tasks = [];
   }
 
-  setTasks(tasks) {
+  set tasks(tasks) {
     this._tasks = tasks.slice();
   }
 
-  getTasks() {
+  get tasks() {
     return this._tasks;
   }
 
-  updateTask(updateType, update) {
+  update(updateType, update) {
     const index = this._tasks.findIndex((task) => task.id === update.id);
 
     if (index === -1) {
@@ -30,7 +30,7 @@ export default class Tasks extends Observer {
     this._notify(updateType, update);
   }
 
-  addTask(updateType, update) {
+  add(updateType, update) {
     this._tasks = [
       update,
       ...this._tasks
@@ -39,7 +39,7 @@ export default class Tasks extends Observer {
     this._notify(updateType, update);
   }
 
-  deleteTask(updateType, update) {
+  delete(updateType, update) {
     const index = this._tasks.findIndex((task) => task.id === update.id);
 
     if (index === -1) {

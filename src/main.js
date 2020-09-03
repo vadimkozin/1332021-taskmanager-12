@@ -12,7 +12,7 @@ const TASK_COUNT = 19;
 const tasks = new Array(TASK_COUNT).fill().map(generateTask);
 
 const tasksModel = new TasksModel();
-tasksModel.setTasks(tasks);
+tasksModel.tasks = tasks;
 
 const filterModel = new FilterModel();
 

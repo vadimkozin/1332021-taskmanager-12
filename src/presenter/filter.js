@@ -4,13 +4,13 @@ import {filter} from "../utils/filter.js";
 import {FilterType, UpdateType} from "../const.js";
 
 export default class Filter {
-  constructor(filterContainer, filterModel, tasksModel) {
-    this._filterContainer = filterContainer;
+  constructor(container, filterModel, tasksModel) {
+    this._container = container;
     this._filterModel = filterModel;
     this._tasksModel = tasksModel;
     this._currentFilter = null;
 
-    this._filterComponent = null;
+    this._component = null;
 
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
@@ -22,18 +22,18 @@ export default class Filter {
   init() {
     this._currentFilter = this._filterModel.getFilter();
 
-    const filters = this._getFilters();
-    const prevFilterComponent = this._filterComponent;
+    const filters = this._filters;
+    const prevFilterComponent = this._component;
 
-    this._filterComponent = new FilterView(filters, this._currentFilter);
-    this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
+    this._component = new FilterView(filters, this._currentFilter);
+    this._component.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent);
+      render(this._container, this._component);
       return;
     }
 
-    replace(this._filterComponent, prevFilterComponent);
+    replace(this._component, prevFilterComponent);
     remove(prevFilterComponent);
   }
 
@@ -49,8 +49,8 @@ export default class Filter {
     this._filterModel.setFilter(UpdateType.MAJOR, filterType);
   }
 
-  _getFilters() {
-    const tasks = this._tasksModel.getTasks();
+  get _filters() {
+    const tasks = this._tasksModel.tasks;
 
     return Object.keys(FilterType).map((type) =>
       ({

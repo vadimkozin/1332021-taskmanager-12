@@ -4,6 +4,7 @@ import {render, replace, remove} from "../utils/render.js";
 import {UserAction, UpdateType} from "../const.js";
 import {isTaskRepeating, isDatesEqual} from "../utils/task.js";
 import {ESCAPE_CODE} from "../const";
+import {bindHandlers} from "../utils/common.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
@@ -85,12 +86,7 @@ export default class Task {
       }
     };
 
-    this._handlers.editClick = this._handlers.editClick.bind(this);
-    this._handlers.favoriteClick = this._handlers.favoriteClick.bind(this);
-    this._handlers.arhiveClick = this._handlers.arhiveClick.bind(this);
-    this._handlers.formSubmit = this._handlers.formSubmit.bind(this);
-    this._handlers.deleteClick = this._handlers.deleteClick.bind(this);
-    this._handlers.escKeyDownHandler = this._handlers.escKeyDownHandler.bind(this);
+    bindHandlers(this._handlers, this);
   }
 
   init(task) {

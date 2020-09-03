@@ -9,14 +9,15 @@ import {render, RenderPosition, remove} from "../utils/render.js";
 import {sortTaskUp, sortTaskDown} from "../utils/task.js";
 import {filter} from "../utils/filter";
 import {SortType, UpdateType, UserAction} from "../const.js";
+import {bindHandlers} from "../utils/common.js";
 
 const TASK_COUNT_PER_STEP = 8;
 
 export default class Board {
-  constructor(boardContainer, tasksModel, filterModel) {
+  constructor(container, tasksModel, filterModel) {
     this._tasksModel = tasksModel;
     this._filterModel = filterModel;
-    this._boardContainer = boardContainer;
+    this._container = container;
     this._renderedTaskCount = TASK_COUNT_PER_STEP;
     this._currenSortType = SortType.DEFAULT;
     this._taskPresenter = {};
@@ -46,13 +47,13 @@ export default class Board {
     this._handlers.viewAction = (actionType, updateType, update) => {
       switch (actionType) {
         case UserAction.UPDATE_TASK:
-          this._tasksModel.updateTask(updateType, update);
+          this._tasksModel.update(updateType, update);
           break;
         case UserAction.ADD_TASK:
-          this._tasksModel.addTask(updateType, update);
+          this._tasksModel.add(updateType, update);
           break;
         case UserAction.DELETE_TASK:
-          this._tasksModel.deleteTask(updateType, update);
+          this._tasksModel.delete(updateType, update);
           break;
       }
     };
@@ -63,12 +64,12 @@ export default class Board {
           this._taskPresenter[data.id].init(data);
           break;
         case UpdateType.MINOR:
-          this._clearBoard();
-          this._renderBoard();
+          this._clear();
+          this._render();
           break;
         case UpdateType.MAJOR:
-          this._clearBoard({resetRenderedTaskCount: true, resetSortType: true});
-          this._renderBoard();
+          this._clear({resetRenderedTaskCount: true, resetSortType: true});
+          this._render();
           break;
       }
     };
@@ -79,8 +80,8 @@ export default class Board {
       }
 
       this._currentSortType = sortType;
-      this._clearBoard({resetRenderedTaskCount: true});
-      this._renderBoard();
+      this._clear({resetRenderedTaskCount: true});
+      this._render();
     };
 
     this._handlers.loadMoreButtonClick = () => {
@@ -102,30 +103,26 @@ export default class Board {
       }
 
       this._currentSortType = sortType;
-      this._clearBoard({resetRenderedTaskCount: true});
-      this._renderBoard();
+      this._clear({resetRenderedTaskCount: true});
+      this._render();
     };
 
-    this._handlers.viewAction = this._handlers.viewAction.bind(this);
-    this._handlers.modelEvent = this._handlers.modelEvent.bind(this);
-    this._handlers.modeChange = this._handlers.modeChange.bind(this);
-    this._handlers.loadMoreButtonClick = this._handlers.loadMoreButtonClick.bind(this);
-    this._handlers.sortTypeChange = this._handlers.sortTypeChange.bind(this);
+    bindHandlers(this._handlers, this);
 
   }
 
   init() {
-    render(this._boardContainer, this._boardComponent);
+    render(this._container, this._boardComponent);
     render(this._boardComponent, this._taskListComponent);
 
     this._tasksModel.addObserver(this._handlers.modelEvent);
     this._filterModel.addObserver(this._handlers.modelEvent);
 
-    this._renderBoard();
+    this._render();
   }
 
   destroy() {
-    this._clearBoard({resetRenderedTaskCount: true, resetSortType: true});
+    this._clear({resetRenderedTaskCount: true, resetSortType: true});
 
     remove(this._taskListComponent);
     remove(this._boardComponent);
@@ -140,7 +137,7 @@ export default class Board {
 
   _getTasks() {
     const filterType = this._filterModel.getFilter();
-    const tasks = this._tasksModel.getTasks();
+    const tasks = this._tasksModel.tasks;
     const filtredTasks = filter[filterType](tasks);
 
     switch (this._currentSortType) {
@@ -189,7 +186,7 @@ export default class Board {
     render(this._boardComponent, this._loadMoreButtonComponent);
   }
 
-  _clearBoard({resetRenderedTaskCount = false, resetSortType = false} = {}) {
+  _clear({resetRenderedTaskCount = false, resetSortType = false} = {}) {
     const taskCount = this._getTasks().length;
 
     this._taskNewPresenter.destroy();
@@ -215,9 +212,9 @@ export default class Board {
     }
   }
 
-  _renderBoard() {
+  _render() {
     const tasks = this._getTasks();
-    const taskCount = tasks.length;
+    const taskCount = this._getTasks().length;
 
     if (taskCount === 0) {
       this._renderNoTasks();

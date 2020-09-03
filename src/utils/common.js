@@ -18,3 +18,9 @@ export const updateItem = (items, update) => {
     ...items.slice(index + 1)
   ];
 };
+
+export const bindHandlers = (handlerMap, that) => {
+  Object.keys(handlerMap).forEach((handler) =>
+    (handlerMap[handler] = handlerMap[handler].bind(that))
+  );
+};

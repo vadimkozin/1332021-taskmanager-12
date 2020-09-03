@@ -3,6 +3,7 @@ import SmartView from "./smart.js";
 import {COLORS} from "../const.js";
 import {isTaskRepeating, formatTaskDueDate} from "../utils/task.js";
 import flatpickr from "flatpickr";
+import {bindHandlers} from "../utils/common.js";
 
 import "../../node_modules/flatpickr/dist/flatpickr.min.css";
 
@@ -210,14 +211,7 @@ export default class TaskEdit extends SmartView {
       this._callback.deleteClick(TaskEdit.parseDataToTask(this._data));
     };
 
-    this._handlers.formSubmit = this._handlers.formSubmit.bind(this);
-    this._handlers.descriptionInput = this._handlers.descriptionInput.bind(this);
-    this._handlers.dueDateToggle = this._handlers.dueDateToggle.bind(this);
-    this._handlers.dueDateChange = this._handlers.dueDateChange.bind(this);
-    this._handlers.repeatingToggle = this._handlers.repeatingToggle.bind(this);
-    this._handlers.repeatingChange = this._handlers.repeatingChange.bind(this);
-    this._handlers.colorChange = this._handlers.colorChange.bind(this);
-    this._handlers.formDeleteClick = this._handlers.formDeleteClick.bind(this);
+    bindHandlers(this._handlers, this);
   }
 
   // Перегружаем метод родителя removeElement,
